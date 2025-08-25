@@ -21,15 +21,20 @@ const parseSheetData = (response: SheetResponse): any[] => {
   if (!response.table || !response.table.rows) return [];
   
   const headers = response.table.cols.map(col => col.label?.toLowerCase() || '');
+  console.log('Headers:', headers);
   
-  return response.table.rows.map(row => {
+  const parsedData = response.table.rows.map((row, index) => {
     const item: any = {};
-    headers.forEach((header, index) => {
-      const cell = row.c[index];
+    headers.forEach((header, headerIndex) => {
+      const cell = row.c[headerIndex];
       item[header] = cell?.v || '';
     });
+    console.log(`Row ${index}:`, item);
     return item;
   });
+  
+  console.log('All parsed data:', parsedData);
+  return parsedData;
 };
 
 const fetchSheetData = async (sheetName: string): Promise<any[]> => {
@@ -57,6 +62,7 @@ export const fetchProperties = async (): Promise<Property[]> => {
   try {
     // Fetch main properties data
     const propertiesData = await fetchSheetData('Imoveis');
+    console.log('Raw properties data:', propertiesData);
     
     // Try to fetch gallery data
     let galleryData: GalleryImage[] = [];
@@ -72,8 +78,11 @@ export const fetchProperties = async (): Promise<Property[]> => {
     }
     
     // Process properties
-    const properties: Property[] = propertiesData
-      .filter(item => item.id && String(item.id).trim()) // Only rows with id filled
+    console.log('Properties before filter:', propertiesData.length);
+    const filteredData = propertiesData.filter(item => item.id && String(item.id).trim());
+    console.log('Properties after filter:', filteredData.length, filteredData);
+    
+    const properties: Property[] = filteredData
       .map(item => {
         // Handle gallery images
         let galeria: string[] = [];
