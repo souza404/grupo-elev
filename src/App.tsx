@@ -8,7 +8,15 @@ import NotFound from "./pages/NotFound";
 import PropertyDetail from "./pages/PropertyDetail";
 import ContactPage from "./pages/ContactPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+      retry: 3,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

@@ -119,8 +119,12 @@
     @apply bg-orange-500/10 text-orange-700 border border-orange-200;
   }
   
-  .badge-pronto {
+  .badge-disponivel {
     @apply bg-green-500/10 text-green-700 border border-green-200;
+  }
+  
+  .badge-reservado {
+    @apply bg-yellow-500/10 text-yellow-700 border border-yellow-200;
   }
   
   .badge-vendido {

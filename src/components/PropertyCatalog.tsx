@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, Filter, SlidersHorizontal, Loader2 } from "lucide-react";
 import PropertyCard from "./PropertyCard";
-import { properties, Property } from "@/data/properties";
+import { Property } from "@/data/properties";
+import { useProperties } from "@/hooks/useProperties";
 
 const PropertyCatalog = () => {
   const navigate = useNavigate();
+  const { data: properties = [], isLoading, error } = useProperties();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("TODOS");
   const [typeFilter, setTypeFilter] = useState("TODOS");
@@ -117,8 +119,10 @@ const PropertyCatalog = () => {
                   <SelectContent>
                     <SelectItem value="TODOS">Todos os status</SelectItem>
                     <SelectItem value="LANÇAMENTO">Lançamento</SelectItem>
+                    <SelectItem value="DISPONÍVEL">Disponível</SelectItem>
                     <SelectItem value="EM OBRAS">Em obras</SelectItem>
                     <SelectItem value="PRONTO">Pronto</SelectItem>
+                    <SelectItem value="RESERVADO">Reservado</SelectItem>
                     <SelectItem value="VENDIDO">Vendido</SelectItem>
                   </SelectContent>
                 </Select>
@@ -170,7 +174,14 @@ const PropertyCatalog = () => {
             {/* Results Summary */}
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-border">
               <span className="text-sm text-muted-foreground">
-                {filteredProperties.length} {filteredProperties.length === 1 ? 'imóvel encontrado' : 'imóveis encontrados'}
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Carregando imóveis...
+                  </span>
+                ) : (
+                  `${filteredProperties.length} ${filteredProperties.length === 1 ? 'imóvel encontrado' : 'imóveis encontrados'}`
+                )}
               </span>
               
               {(searchTerm || statusFilter !== "TODOS" || typeFilter !== "TODOS" || bedroomsFilter !== "TODOS" || priceRangeFilter !== "TODOS") && (
@@ -182,7 +193,31 @@ const PropertyCatalog = () => {
           </div>
 
           {/* Properties Grid */}
-          {filteredProperties.length > 0 ? (
+          {error ? (
+            <div className="text-center py-16">
+              <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-12 h-12 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                Erro ao carregar imóveis
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                Tente novamente em alguns minutos.
+              </p>
+            </div>
+          ) : isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-muted rounded-lg h-64 mb-4"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredProperties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProperties.map((property) => (
                 <PropertyCard
