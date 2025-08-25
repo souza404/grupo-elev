@@ -19,31 +19,16 @@ const PropertyCard = ({ property, onViewDetails }: PropertyCardProps) => {
         return "badge-obras";
       case "PRONTO":
         return "badge-pronto";
-      case "DISPONÍVEL":
-        return "badge-disponivel";
-      case "RESERVADO":
-        return "badge-reservado";
       case "VENDIDO":
         return "badge-vendido";
       default:
-        return "badge-disponivel";
+        return "badge-pronto";
     }
   };
 
   const openWhatsApp = () => {
     const message = encodeURIComponent(`Olá! Tenho interesse no imóvel ${property.nome}. Gostaria de mais informações.`);
-    
-    // Handle WhatsApp link - could be full URL or just number
-    let whatsappUrl = property.link_whatsapp;
-    if (!whatsappUrl.startsWith('http')) {
-      // If it's just a number, convert to wa.me format
-      const cleanNumber = whatsappUrl.replace(/\D/g, '');
-      whatsappUrl = `https://wa.me/${cleanNumber}`;
-    }
-    
-    // Add message parameter
-    const separator = whatsappUrl.includes('?') ? '&' : '?';
-    window.open(`${whatsappUrl}${separator}text=${message}`, "_blank");
+    window.open(`https://wa.me/${property.link_whatsapp}?text=${message}`, "_blank");
   };
 
   const handleViewDetails = () => {

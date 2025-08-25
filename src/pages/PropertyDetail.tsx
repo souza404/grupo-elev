@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,11 +15,9 @@ import {
   Calendar,
   Building2,
   ChevronLeft,
-  ChevronRight,
-  Loader2
+  ChevronRight
 } from "lucide-react";
-import { Property } from "@/data/properties";
-import { useProperty, useProperties } from "@/hooks/useProperties";
+import { Property, properties } from "@/data/properties";
 import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -28,35 +26,21 @@ import PropertyCard from "@/components/PropertyCard";
 const PropertyDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { data: property, isLoading, error } = useProperty(slug!);
-  const { data: allProperties = [] } = useProperties();
+  const [property, setProperty] = useState<Property | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Redirect to home if property not found or error
-  if (error || (!isLoading && !property)) {
-    navigate("/");
-    return null;
-  }
-  
-  if (isLoading) {
-    return (
-      <div className="min-h-screen">
-        <Header />
-        <main className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <span className="ml-2">Carregando imóvel...</span>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  useEffect(() => {
+    const foundProperty = properties.find(p => p.slug === slug);
+    if (foundProperty) {
+      setProperty(foundProperty);
+    } else {
+      // Property not found, redirect to home
+      navigate("/");
+    }
+  }, [slug, navigate]);
 
   if (!property) {
-    return null;
+    return null; // or loading spinner
   }
 
   const getStatusBadgeClass = (status: string) => {
@@ -67,31 +51,16 @@ const PropertyDetail = () => {
         return "badge-obras";
       case "PRONTO":
         return "badge-pronto";
-      case "DISPONÍVEL":
-        return "badge-disponivel";
-      case "RESERVADO":
-        return "badge-reservado";
       case "VENDIDO":
         return "badge-vendido";
       default:
-        return "badge-disponivel";
+        return "badge-pronto";
     }
   };
 
   const openWhatsApp = () => {
     const message = encodeURIComponent(`Olá! Tenho interesse no imóvel ${property.nome}. Gostaria de mais informações e agendar uma visita.`);
-    
-    // Handle WhatsApp link - could be full URL or just number
-    let whatsappUrl = property.link_whatsapp;
-    if (!whatsappUrl.startsWith('http')) {
-      // If it's just a number, convert to wa.me format
-      const cleanNumber = whatsappUrl.replace(/\D/g, '');
-      whatsappUrl = `https://wa.me/${cleanNumber}`;
-    }
-    
-    // Add message parameter
-    const separator = whatsappUrl.includes('?') ? '&' : '?';
-    window.open(`${whatsappUrl}${separator}text=${message}`, "_blank");
+    window.open(`https://wa.me/${property.link_whatsapp}?text=${message}`, "_blank");
   };
 
   const nextImage = () => {
@@ -107,7 +76,7 @@ const PropertyDetail = () => {
   };
 
   // Get similar properties
-  const similarProperties = allProperties
+  const similarProperties = properties
     .filter(p => p.id !== property.id && (p.tipo === property.tipo || p.bairro === property.bairro))
     .slice(0, 3);
 

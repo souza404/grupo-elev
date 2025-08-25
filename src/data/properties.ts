@@ -1,7 +1,7 @@
 export interface Property {
   id: string;
   nome: string;
-  status: "LANÇAMENTO" | "EM OBRAS" | "PRONTO" | "VENDIDO" | "DISPONÍVEL" | "RESERVADO";
+  status: "LANÇAMENTO" | "EM OBRAS" | "PRONTO" | "VENDIDO";
   imagem_url: string;
   galeria: string[];
   preco: string;
