@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import elevLogo from "@/assets/elev-logo.png";
+import { FaWhatsapp } from "react-icons/fa";
 
 const WHATSAPP_NUMBER = "+5511999999999";
 
@@ -64,7 +65,7 @@ const Header = () => {
               className="btn-whatsapp"
               size="sm"
             >
-              <Phone className="w-4 h-4 mr-2" />
+              <FaWhatsapp className="w-4 h-4 mr-2" />
               Falar no WhatsApp
             </Button>
           </div>
@@ -107,7 +108,7 @@ const Header = () => {
               className="btn-whatsapp mt-3 w-full"
               size="sm"
             >
-              <Phone className="w-4 h-4 mr-2" />
+              <FaWhatsapp className="w-4 h-4 mr-2" />
               Falar no WhatsApp
             </Button>
           </nav>

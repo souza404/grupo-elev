@@ -11,6 +11,7 @@ import {
   Linkedin,
   ArrowUp
 } from "lucide-react";
+import { FaWhatsapp} from 'react-icons/fa';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -80,7 +81,7 @@ const Footer = () => {
                 onClick={openWhatsApp}
                 className="btn-whatsapp"
               >
-                <MessageCircle className="w-4 h-4 mr-2" />
+                <FaWhatsapp className="w-4 h-4 mr-2" />
                 Falar no WhatsApp
               </Button>
             </div>
@@ -118,7 +119,7 @@ const Footer = () => {
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 text-primary" />
+                  <FaWhatsapp className="w-5 h-5 text-primary" />
                   <div className="text-background/80">(11) 99999-9999</div>
                 </div>
                 
@@ -200,7 +201,7 @@ const Footer = () => {
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full btn-whatsapp shadow-lg hover:shadow-xl z-40 p-0"
         size="icon"
       >
-        <MessageCircle className="w-7 h-7" />
+        <FaWhatsapp className="w-7 h-7" />
       </Button>
     </footer>
   );

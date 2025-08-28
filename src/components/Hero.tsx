@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Phone, Search } from "lucide-react";
 import heroBuildingImage from "@/assets/hero-building.jpg";
+import { FaWhatsapp } from "react-icons/fa";
 
 const WHATSAPP_NUMBER = "+5511999999999";
 
@@ -52,7 +53,7 @@ const Hero = () => {
               size="lg"
               className="btn-whatsapp px-8 py-4 text-lg font-semibold"
             >
-              <Phone className="w-5 h-5 mr-2" />
+              <FaWhatsapp className="w-5 h-5 mr-2" />
               Falar no WhatsApp
             </Button>
             
